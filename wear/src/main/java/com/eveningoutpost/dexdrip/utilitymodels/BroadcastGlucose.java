@@ -3,6 +3,7 @@ package com.eveningoutpost.dexdrip.utilitymodels;
 import static com.eveningoutpost.dexdrip.models.JoH.dateTimeText;
 import static com.eveningoutpost.dexdrip.models.JoH.msSince;
 import static com.eveningoutpost.dexdrip.utilitymodels.Constants.MINUTE_IN_MS;
+import static com.eveningoutpost.dexdrip.utilitymodels.Constants.SECOND_IN_MS;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,7 +35,9 @@ public class BroadcastGlucose {
                     return;
                 }
 
-                if (Math.abs(bgReading.timestamp - lastTimestamp) < MINUTE_IN_MS) {
+
+                long blockLastHalfMinute = 30L * SECOND_IN_MS;
+                if (Math.abs(bgReading.timestamp - lastTimestamp) < blockLastHalfMinute) {
                     val msg = String.format("Refusing to broadcast a reading with close timestamp to last broadcast:  %s (%d) vs %s (%d) ", dateTimeText(lastTimestamp), lastTimestamp, dateTimeText(bgReading.timestamp), bgReading.timestamp);
                     if (bgReading.timestamp == lastTimestamp) {
                         UserError.Log.d(TAG, msg);
